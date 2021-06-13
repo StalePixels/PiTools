@@ -1,0 +1,4 @@
+.idea
+cmake-build-debug
+src/cmake-build-debug
+*/zcc_opt.def
