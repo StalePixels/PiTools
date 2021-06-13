@@ -2,3 +2,7 @@
 cmake-build-debug
 src/cmake-build-debug
 */zcc_opt.def
+*/*_CODE.bin
+*/*_MAIN.bin
+*/*_UNASSIGNED.bin
+*/*.map
