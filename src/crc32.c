@@ -36,7 +36,6 @@ int main(int argc, char **argv)
     uint8_t data = esxdos_f_open(argv[1], ESXDOS_MODE_R | ESXDOS_MODE_OE);
 
     if(errno) {
-        printf("%d", errno);
         return errno;
     }
 
@@ -48,9 +47,10 @@ int main(int argc, char **argv)
         finfo.size = finfo.size - BUFFER_SIZE;
         previousCrc32 = crc32_4x8bytes(buffer, BUFFER_SIZE, previousCrc32);
     }
+    esxdos_f_read(data, buffer, finfo.size);
     previousCrc32 = crc32_4x8bytes(buffer, finfo.size, previousCrc32);
 
-    printf("%lx", previousCrc32);
+    printf("%lx\n", previousCrc32);
     esxdos_f_close(data);
 
     return 0;

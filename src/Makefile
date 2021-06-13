@@ -33,4 +33,4 @@ crc32:
 	$(MV) CRC32 $(BUILD_DIR)/
 
 clean:
-	rm -f *.o *~ core crc32_*bin crc32.map
+	rm -f *.o *~ *_CODE.bin *_MAIN.bin *_UNASSIGNED.bin *.map
