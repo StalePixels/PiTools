@@ -13,7 +13,7 @@
 #include "crc32.h"
 #include "help.h"
 
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 4096
 uint8_t buffer[BUFFER_SIZE];
 
 #define HELP_TEXT_LENGTH        4
