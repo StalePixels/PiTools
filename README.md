@@ -8,3 +8,7 @@ Compute the CRC32 checksum of a file.  CRC32 checksums are used as part of NextP
 
 This version uses Slicing-by-8 algorithm, by Intel - as found on https://sourceforge.net/projects/slicing-by-8/ and reasonable sized embedded lookup table to help the speed along.
 
+piput
+-----
+
+Sent a file to the Raspberry Pi using the "NBN" 8bit, error correcting protocol while displaying optional progress bar.

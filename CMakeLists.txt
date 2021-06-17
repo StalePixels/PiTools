@@ -7,9 +7,14 @@ include_directories(
         src/inc
 )
 
+add_executable(piput
+        src/piput.c
+        src/inc/zxn.h
+        src/inc/help.h src/lib/help.c
+        src/inc/uart.h src/lib/uart.c
+        src/inc/piSupReset.h src/lib/piSupReset.c src/inc/nbn.h src/lib/nbn.c)
+
 add_executable(crc32
         src/crc32.c
-        src/inc/crc32.h src/lib/crc32.c
-        src/inc/help.h src/lib/help.c
-
-)
+        src/lib/help.c src/inc/help.h
+        src/lib/crc32.c src/inc/crc32.h)

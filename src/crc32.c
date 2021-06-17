@@ -16,12 +16,13 @@
 #define BUFFER_SIZE 4096
 uint8_t buffer[BUFFER_SIZE];
 
+
+
 #define HELP_TEXT_LENGTH        4
 const uint8_t help_text_length = HELP_TEXT_LENGTH;
 const char *help_text[HELP_TEXT_LENGTH] = {
         " Usage examples",
         "\nCompute CRC32 checksum of a file",
-        "",
         "\n\t.CRC32 /path/to/file.ext",
         "\nFull Docs at http://zxn.gg/crc32",
 };
