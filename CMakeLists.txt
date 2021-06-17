@@ -12,7 +12,9 @@ add_executable(piput
         src/inc/zxn.h
         src/inc/help.h src/lib/help.c
         src/inc/uart.h src/lib/uart.c
-        src/inc/piSupReset.h src/lib/piSupReset.c src/inc/nbn.h src/lib/nbn.c)
+        src/inc/piSupReset.h src/lib/piSupReset.c
+        src/inc/nbn.h src/lib/nbn.c
+        src/inc/nbnSendHeader.h src/lib/nbnSendHeader.c)
 
 add_executable(crc32
         src/crc32.c

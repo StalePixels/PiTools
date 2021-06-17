@@ -29,23 +29,14 @@ default: all
 
 all: crc32 piput
 
-CRC32_OBJS := lib/logo.o lib/help.o lib/crc32.o
-
-PIPUT_OBJS := lib/logo.o lib/help.o \
-	lib/uartSetBaud.o \
-	lib/piUartSwitch.o lib/piSupReset.o \
-	lib/uartDrain.o lib/uartSendCmd.o lib/uartWaitOK.o \
-	lib/uartWaitStr.o lib/uartSendStr.o \
-	lib/uartGetChr.o lib/uartSendChr.o
-
-
-
 lib/%.o: lib/%.c inc/%.h
 	$(CC) $(CCFLAGS) $(LDFLAGS) $(INCFLAGS) $< -c -o$@
 
 ###
 # CRC32
 ###
+CRC32_OBJS := lib/logo.o lib/help.o lib/crc32.o
+
 crc32: $(CRC32_OBJS)
 	$(CC) $(CCFLAGS) -startup=30 $(LDFLAGS) $(INCFLAGS) crc32.c $(CRC32_OBJS) -ocrc32 -create-app \
 		-pragma-include:crc32-pragma.inc -subtype=dotn $(CZFLAGS)
@@ -58,6 +49,14 @@ install_crc32:
 ###
 # PIPUT
 ###
+PIPUT_OBJS := lib/logo.o lib/help.o \
+	lib/piUartSwitch.o lib/piSupReset.o \
+	lib/uartSetBaud.o lib/uartDrain.o \
+	lib/uartSendCmd.o lib/uartWaitOK.o \
+	lib/uartWaitStr.o lib/uartSendStr.o \
+	lib/uartGetChr.o lib/uartSendChr.o \
+	lib/nbnSendHeader.o
+
 piput: $(PIPUT_OBJS)
 	$(CC) $(CCFLAGS) -startup=30 $(LDFLAGS) $(INCFLAGS) piput.c $(PIPUT_OBJS) -opiput -create-app \
 		-pragma-include:piput-pragma.inc -subtype=dotn $(CZFLAGS)
@@ -72,4 +71,4 @@ install_piput:
 dist_clean: clean
 	rm -f $(BUILD_DIR)/*
 clean:
-	rm -f lib/*.o *.o *~ *_CODE.bin *_MAIN.bin *_UNASSIGNED.bin *.map
+	rm -f lib/*.o *.o *~ *_CODE.bin *_MAIN.bin *_UNASSIGNED.bin *.map+

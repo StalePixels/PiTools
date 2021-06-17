@@ -19,8 +19,10 @@ uint8_t uartWaitOK(bool localecho) {
     cbuff[3] = uartGetChr();
 
     if(localecho==true) {
-        printf("%c%c%c%c(%d,%d,%d,%d)>", cbuff[0], cbuff[1], cbuff[2], cbuff[3], cbuff[0], cbuff[1], cbuff[2],
-               cbuff[3]);
+//        printf("%c%c%c%c(%d,%d,%d,%d)>", cbuff[0], cbuff[1], cbuff[2], cbuff[3], cbuff[0], cbuff[1], cbuff[2],
+//               cbuff[3]);
+        printf("%c",            cbuff[3]);
+
     }
 
     if ((cbuff[3] == 10 && cbuff[2] == 13 && cbuff[1] == 'K' && cbuff[0] == 'O') ||

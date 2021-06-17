@@ -18,11 +18,15 @@
 #include "uartWaitStr.h"
 #include "uartWaitOK.h"
 #include "uartSetBaud.h"
+#include "nbnSendHeader.h"
 
 #define BUFFER_SIZE 4096
 uint8_t buffer[BUFFER_SIZE];
 
 #define HELP_TEXT_LENGTH        6
+
+#define NBN_BLOCK_SIZE          16384
+
 const uint8_t help_text_length = HELP_TEXT_LENGTH;
 const char *help_text[HELP_TEXT_LENGTH] = {
         " Usage examples",
@@ -37,17 +41,17 @@ bool   progress = true;
 
 int main(int argc, char **argv)
 {
-    uint8_t filename = 1;
+    uint8_t filearg = 1;
 
     // One arg, minimum
     if((argc < 2) || (!strcmp(argv[1],"-h"))) exit_with_help("PIPUT");
 
     if(!strcmp(argv[1],"-q")) {
         progress = false;
-        filename++;
+        filearg++;
     }
 
-    uint8_t data = esxdos_f_open(argv[filename], ESXDOS_MODE_R | ESXDOS_MODE_OE);
+    uint8_t data = esxdos_f_open(argv[filearg], ESXDOS_MODE_R | ESXDOS_MODE_OE);
 
     if(errno) {
         return errno;
@@ -65,15 +69,28 @@ int main(int argc, char **argv)
 //    previousCrc32 = crc32_4x8bytes(buffer, finfo.size, previousCrc32);
 //
 //    printf("%lx\n", previousCrc32);
-    esxdos_f_close(data);
 
     piUartSwitch();
     uartSetBaud(115200);
     piSupReset();
-    uartSendCmd("ls\n");
+//    uartSendCmd("ls\n");
     uartWaitStr("SUP>");
-    uartSendCmd("echo \"OK\"\n");
+//    uartSendCmd("echo \"OK\"\n");
+
+    char *filename = strrchr(argv[filearg], '/');
+
+    if (filename == NULL) {
+        filename = argv[filearg];
+    }
+    else {
+        filename++;
+    }
+
+    uartSendCmd("nextpi-file_receive -vl -nbn 255\n");
+    uartWaitOK(false);
+    nbnSendHeader(finfo.size, NBN_BLOCK_SIZE, filename);
     uartWaitOK(true);
 
+    esxdos_f_close(data);
     return 0;
 }
