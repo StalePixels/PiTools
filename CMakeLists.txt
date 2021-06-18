@@ -11,10 +11,19 @@ add_executable(piput
         src/piput.c
         src/inc/zxn.h
         src/inc/help.h src/lib/help.c
-        src/inc/uart.h src/lib/uart.c
         src/inc/piSupReset.h src/lib/piSupReset.c
-        src/inc/nbn.h src/lib/nbn.c
-        src/inc/nbnSendHeader.h src/lib/nbnSendHeader.c)
+        src/inc/piUartSwitch.h src/lib/piUartSwitch.c
+        src/inc/uartDrain.h src/lib/uartDrain.c
+        src/inc/uartGetChr.h src/lib/uartGetChr.c
+        src/inc/uartSendChr.h src/lib/uartSendChr.c
+        src/inc/uartSendCmd.h src/lib/uartSendCmd.c
+        src/inc/uartSendStr.h src/lib/uartSendStr.c
+        src/inc/uartSetBaud.h src/lib/uartSetBaud.c
+        src/inc/uartWaitOK.h src/lib/uartWaitOK.c
+        src/inc/uartWaitStr.h src/lib/uartWaitStr.c
+        src/inc/nbnSendHeader.h src/lib/nbnSendHeader.c
+        src/inc/nbnSendBlock.h src/lib/nbnSendBlock.c
+        src/inc/spuiDrawTriangle.h src/lib/spuiDrawTriangle.c)
 
 add_executable(crc32
         src/crc32.c

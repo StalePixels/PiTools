@@ -13,9 +13,6 @@
 #include "uartDrain.h"
 #include "zxn.h"
 
-
-static unsigned char    uartBuff[256];
-
 unsigned char           uartBufferChar;
 
 unsigned char uartGetChr() {

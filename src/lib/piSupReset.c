@@ -12,23 +12,22 @@
 #include "uartDrain.h"
 #include "uartSendStr.h"
 #include "uartSendChr.h"
+#include "uartWaitStr.h"
 #include "uart.h"
 
-void piSupReset() {
-    checkFlag = 10;
-    uartSendChr(3);         // send a Control C - to kill anything that may be running on the SUP
-    uartDrain();
-    uartSendStr("reset\n");
-    checkFlag = 0;
+void piSupReset(bool verbose) {
+    bool reset = false;
     get_again:
-    uartDrain();
-    if(!checkFlag) {
-        printf("Resetting... ");
-        checkFlag = 255;
-        uartSendChr(4);         // send a Control D - to reset the uart
+    uartSendChr(4);         // send a Control D - to reset the supervisor
+    if(!uartDrain()) {
+        reset = true;
+        if(verbose) printf("\nResetting SUPervisor... \n");
+        uartSendChr(3);         // send a Control C - to kill, and retry
         goto get_again;
-    } else if(checkFlag==255) {
-        printf("ERROR draining UART\n");
+    } else if(reset) {
+        if(verbose) printf("\nERROR draining UART\n");
         exit(1);
     }
+
+    uartWaitStr("SUP>");
 }

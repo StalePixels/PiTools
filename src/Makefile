@@ -45,20 +45,20 @@ crc32: $(CRC32_OBJS)
 install_crc32:
 	$(CP) $(BUILD_DIR)/CRC32 $(INSTALL_DIR)/dot/
 
-
 ###
 # PIPUT
 ###
-PIPUT_OBJS := lib/logo.o lib/help.o \
+PIPUT_OBJS := lib/help.o \
 	lib/piUartSwitch.o lib/piSupReset.o \
 	lib/uartSetBaud.o lib/uartDrain.o \
 	lib/uartSendCmd.o lib/uartWaitOK.o \
 	lib/uartWaitStr.o lib/uartSendStr.o \
 	lib/uartGetChr.o lib/uartSendChr.o \
-	lib/nbnSendHeader.o
+	lib/nbnSendHeader.o lib/nbnSendBlock.o \
+	lib/spuiDrawTriangle.o
 
 piput: $(PIPUT_OBJS)
-	$(CC) $(CCFLAGS) -startup=30 $(LDFLAGS) $(INCFLAGS) piput.c $(PIPUT_OBJS) -opiput -create-app \
+	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piput.c $(PIPUT_OBJS) -opiput -create-app \
 		-pragma-include:piput-pragma.inc -subtype=dotn $(CZFLAGS)
 	$(MV) PIPUT $(BUILD_DIR)/
 

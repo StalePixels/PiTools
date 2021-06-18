@@ -16,8 +16,6 @@
 #define BUFFER_SIZE 4096
 uint8_t buffer[BUFFER_SIZE];
 
-
-
 #define HELP_TEXT_LENGTH        4
 const uint8_t help_text_length = HELP_TEXT_LENGTH;
 const char *help_text[HELP_TEXT_LENGTH] = {
@@ -29,10 +27,16 @@ const char *help_text[HELP_TEXT_LENGTH] = {
 
 static uint32_t previousCrc32 = 0;
 
+const char              name[] = "PIPUT";
+
 int main(int argc, char **argv)
 {
     // One arg, minimum
-    if((argc < 2) || (!strcmp(argv[1],"-h"))) exit_with_help("CRC32");
+    if((argc < 2) || (!strcmp(argv[1],"-h"))) {
+        logo(name);
+        help(name);
+        exit(errno);
+    }
 
     uint8_t data = esxdos_f_open(argv[1], ESXDOS_MODE_R | ESXDOS_MODE_OE);
 

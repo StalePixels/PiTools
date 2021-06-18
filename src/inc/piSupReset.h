@@ -5,6 +5,8 @@
 #ifndef PITOOLS_LIB_PISUBRESET_H
 #define PITOOLS_LIB_PISUBRESET_H
 
-void piSupReset();
+#include <stdbool.h>
+
+void piSupReset(bool verbose);
 
 #endif //PITOOLS_LIB_PISUBRESET_H

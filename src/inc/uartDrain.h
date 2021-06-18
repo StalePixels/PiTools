@@ -5,8 +5,10 @@
 #ifndef PITOOLS_LIB_UARTDRAIN_H
 #define PITOOLS_LIB_UARTDRAIN_H
 
+#include <stdbool.h>
+
 extern uint8_t          checkFlag;
 
-void uartDrain();
+bool uartDrain();
 
 #endif //PITOOLS_LIB_UARTDRAIN_H

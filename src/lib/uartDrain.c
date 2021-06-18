@@ -11,18 +11,19 @@
 #include "uart.h"
 #include "zxn.h"
 
+bool          checkFlag;
 
-uint8_t          checkFlag;
-
-void uartDrain() {
+bool uartDrain() {
+    bool          checkFlag = false;
     for(uint8_t checking=10;checking;--checking) {
         WAIT_FOR_SCANLINE(1); //waste some time, in case there's LOTS of output, let it flood the buffer if required!
         get_more:
-        if (IO_UART_STATUS & IUS_RX_AVAIL) {  // Busy wait to get a single byte.
+        if (IO_UART_STATUS & IUS_RX_AVAIL) {  // Busy wait && get a single byte.
             zx_border((uint8_t )checking%8);
-            checkFlag = 1;
+            checkFlag = true;
             IO_UART_RX;  // just take a character, and throw it away
             goto get_more;
         }
     }
+    return checkFlag;
 }

@@ -2,7 +2,7 @@
 // Created by D. Rimron-Soutter on 13/06/2021.
 //
 
-#include "Crc32.h"
+#include "crc32.h"
 
 /// compute CRC32 (Slicing-by-8 algorithm), unroll inner loop 4 times
 ///   Large parts of this logic are "Borrowed" from

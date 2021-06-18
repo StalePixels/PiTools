@@ -5,35 +5,27 @@
 #include <arch/zxn.h>
 #include "uartSendChr.h"
 #include "uartSendStr.h"
+#include "nbnSendHeader.h"
 
-void nbnSendHeader(uint32_t filesize, uint16_t blocksize, const char *name) {
-    uint32_t blockcount = filesize / blocksize;
-    uint16_t finalblock = filesize % blocksize;
+void nbnSendHeader(uint32_t filesize, const char *name) {
+    // re
+    uint32_t blockcount = filesize / NBN_BLOCK_SIZE;
+    uint16_t finalblock = filesize % NBN_BLOCK_SIZE;
 
     // Send size
-//    uartByte = ((filesize) >> 24) & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((filesize >> 24) & 255);
-//    uartByte = ((filesize) >> 16) & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((filesize >> 16) & 255);
-//    uartByte = ((filesize) >> 8 ) & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((filesize >> 8 ) & 255);
-//    uartByte = ((filesize)      ) & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((filesize      ) & 255);
 
     // Send blocks
-//    uartByte = (blockcount >> 24) & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((blockcount >> 24) & 255);
-//    uartByte = (blockcount >> 16) & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((blockcount >> 16) & 255);
-//    uartByte = (blockcount >> 8 ) & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((blockcount >> 8 ) & 255);
-//    uartByte =  blockcount        & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((blockcount      ) & 255);
 
     // Send remainder
-//    uartByte = (finalblock >> 8 ) & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((finalblock >> 8 ) & 255);
-//    uartByte =  finalblock        & 255;    uartSendChr_FASTMACRO(uartByte);
     uartSendChr_FASTMACRO((finalblock      ) & 255);
 
     // Filename

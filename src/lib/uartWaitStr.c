@@ -22,7 +22,7 @@ void uartWaitStr(const char* cmd) {
     } else {
         cmd_char = 0;
     }
-printf("%c", uartBufferChar);
+//printf("%c", uartBufferChar);
     if(cmd[cmd_char]==0) return;
 
     goto getchar;
