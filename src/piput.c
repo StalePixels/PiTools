@@ -46,7 +46,7 @@ const char *help_text[HELP_TEXT_LENGTH] = {
 };
 
 const unsigned char    *block           = 0x4000;
-bool                    quiet           = false;
+bool                    verbose         = true;
 uint8_t                 filearg         = 1;
 struct esxdos_stat      finfo;  // = {0,0,0,0,0};
 
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     }
 
     if(!strcmp(argv[1],"-q")) {
-        quiet = true;
+        verbose = false;
         filearg++;
     }
 
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 
     piUartSwitch();
     uartSetBaud(115200);
-    piSupReset(quiet);
+    piSupReset(verbose);
 
     char *filename = strrchr(argv[filearg], '/');
 
@@ -122,22 +122,24 @@ int main(int argc, char **argv)
         progress_part = (nbn_blocks / 20) - 1;
     }
 
-    printf("\x16\x06\x0A\x10""7\x11""0\x13""1 Uploading...   \x10""2 ");
+    if(verbose) {
+        printf("\x16\x06\x0A\x10""7\x11""0\x13""1 Uploading...   \x10""2 ");
 
-    for(uint8_t col = 22;col < 27;col++) {
-        spuiDrawTriangle(col, 10);
-        printPaper(rainbow[rainbow_pointer]);
-        rainbow_pointer++;
-        printf("\x10%c ", rainbow[rainbow_pointer]);
-    }
+        for (uint8_t col = 22; col < 27; col++) {
+            spuiDrawTriangle(col, 10);
+            printPaper(rainbow[rainbow_pointer]);
+            rainbow_pointer++;
+            printf("\x10%c ", rainbow[rainbow_pointer]);
+        }
 
-    printf("\x10""0\x11""7\x16\x06\x0B                      "
-                         "\x16\x06\x0C                      "
-                         "\x16\x06\x0D______________________");
+        printf("\x10""0\x11""7\x16\x06\x0B                      "
+               "\x16\x06\x0C                      "
+               "\x16\x06\x0D______________________");
 
-    for(uint8_t row = 80; row < 104; row++) {
-        plot(40, row);
-        plot(215, row);
+        for (uint8_t row = 80; row < 104; row++) {
+            plot(40, row);
+            plot(215, row);
+        }
     }
 
     uartSendCmd("nextpi-file_receive -nbn 256\n");
@@ -153,11 +155,15 @@ int main(int argc, char **argv)
         progress_part = (nbn_blocks / 20) - 1;
     }
 
-    printf("\x16\x07\x0C\x13""0                    \x16\x07\x0C");
+    if(verbose) {
+        printf("\x16\x07\x0C\x13""0                    \x16\x07\x0C");
+    }
     // FOR BLOCKS
     for(;nbn_blocks>0;nbn_blocks--) {
     load_block:
-        printf("\x12\x31\x10""6%c", progressChar);
+        if(verbose) {
+            printf("\x12\x31\x10""6%c", progressChar);
+        }
         ZXN_WRITE_MMU2(btm_page);
         ZXN_WRITE_MMU3(top_page);
 
@@ -175,7 +181,9 @@ transmit_block:
 
         if(nbn_status==NBN_BLOCK_FAIL) {
             if(--nbn_retries) {
-                printf("\x1C\x10""6\x11""2");  // move cursor back one
+                if(verbose) {
+                    printf("\x1C\x10""6\x11""2");  // move cursor back one
+                }
                 progressChar = '0' + nbn_retries;
                 goto transmit_block;
             }
@@ -184,20 +192,22 @@ transmit_block:
             }
         }
         else {
-            printf("\x1C\x11""4\x12\x30");  // move cursor back one
-            if(progress_style) {
-                for (uint8_t iter8 = progress_part; iter8 > 0; --iter8) {
-                    putchar(progressChar);
+            if(verbose) {
+                printf("\x1C\x11""4\x12\x30");  // move cursor back one
+
+                if (progress_style) {
+                    for (uint8_t iter8 = progress_part; iter8 > 0; --iter8) {
+                        putchar(progressChar);
+                    }
+                } else {
+                    ++progress;
+                    if (progress >= progress_parts * (progress_part / 20.0f)) {
+                        ++progress_part;
+                        putchar(progressChar);
+                    }
                 }
+                progressChar = ' ';
             }
-            else {
-                ++progress;
-                if(progress>=progress_parts*(progress_part/20.0f)) {
-                    ++progress_part;
-                    putchar(progressChar);
-                }
-            }
-            progressChar = ' ';
         }
     }
 
@@ -216,11 +226,15 @@ transmit_last_block:
     ZXN_WRITE_MMU2(10);
     ZXN_WRITE_MMU3(11);
 
-    putchar(progressChar);
+    if(verbose) {
+        putchar(progressChar);
+    }
 
     if(nbn_status==NBN_BLOCK_FAIL) {
         if(--nbn_retries) {
-            printf("\x1C\x10""6\x11""2");  // move cursor back one
+            if(verbose) {
+                printf("\x1C\x10""6\x11""2");  // move cursor back one
+            }
             progressChar = '0' + nbn_retries;
             goto transmit_last_block;
         }
@@ -229,7 +243,9 @@ transmit_last_block:
         }
     }
     else {
-        printf("\x16\x07\x0C\x11""4\x12\x30                   !\x13""0");
+        if(verbose) {
+            printf("\x16\x07\x0C\x11""4\x12\x30                    \x13""0");
+        }
     }
 cleanup:
 
