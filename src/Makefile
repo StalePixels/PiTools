@@ -38,7 +38,7 @@ lib/%.o: lib/%.c inc/%.h
 CRC32_OBJS := lib/logo.o lib/help.o lib/crc32.o
 
 crc32: $(CRC32_OBJS)
-	$(CC) $(CCFLAGS) -startup=30 $(LDFLAGS) $(INCFLAGS) crc32.c $(CRC32_OBJS) -ocrc32 -create-app \
+	$(CC) $(CCFLAGS) -startup=30 $(LDFLAGS) $(INCFLAGS) crc32.c $(CRC32_OBJS) -oCRC32 -create-app \
 		-pragma-include:crc32-pragma.inc -subtype=dotn $(CZFLAGS)
 	$(MV) CRC32 $(BUILD_DIR)/
 
@@ -58,12 +58,32 @@ PIPUT_OBJS := lib/help.o \
 	lib/spuiDrawTriangle.o
 
 piput: $(PIPUT_OBJS)
-	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piput.c $(PIPUT_OBJS) -opiput -create-app \
+	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piput.c $(PIPUT_OBJS) -oPIPUT -create-app \
 		-pragma-include:piput-pragma.inc -subtype=dotn $(CZFLAGS)
 	$(MV) PIPUT $(BUILD_DIR)/
 
 install_piput:
 	$(CP) $(BUILD_DIR)/PIPUT $(INSTALL_DIR)/dot/
+
+###
+# PIGET
+###
+PIGET_OBJS := lib/help.o \
+	lib/piUartSwitch.o lib/piSupReset.o \
+	lib/uartSetBaud.o lib/uartDrain.o \
+	lib/uartSendCmd.o lib/uartWaitOK.o \
+	lib/uartWaitStr.o lib/uartSendStr.o \
+	lib/uartGetChr.o lib/uartSendChr.o \
+	lib/nbnSendHeader.o lib/nbnSendBlock.o \
+	lib/spuiDrawTriangle.o
+
+piget: $(PIPUT_OBJS)
+	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piput.c $(PIPUT_OBJS) -oPIGET -create-app \
+		-pragma-include:piget-pragma.inc -subtype=dotn $(CZFLAGS)
+	$(MV) PIGET $(BUILD_DIR)/
+
+install_piget:
+	$(CP) $(BUILD_DIR)/PIGET $(INSTALL_DIR)/dot/
 
 ###
 # META

@@ -39,10 +39,10 @@ const uint8_t help_text_length = HELP_TEXT_LENGTH;
 const char *help_text[HELP_TEXT_LENGTH] = {
         " Usage examples",
         "\nUpload to pi & show progress bar",
-        "\n\t.PIPUT /path/to/file.ext",
+        "\n\t.PIGET /path/to/file.ext",
         "\nUpload to pi & hide progress bar",
-        "\n\t.PIPUT -q /path/to/file.ext",
-        "\nFull Docs at http://zxn.gg/piput",
+        "\n\t.PIGET -q /path/to/file.ext",
+        "\nFull Docs at http://zxn.gg/piget",
 };
 
 const unsigned char    *block           = 0x4000;
@@ -63,7 +63,7 @@ uint16_t                progress        = 0;
 uint8_t                 file_in;
 uint8_t                 top_page, btm_page;
 
-const char              name[] = "PIPUT";
+const char              name[] = "PIGET";
 
 int main(int argc, char **argv)
 {
@@ -91,6 +91,7 @@ int main(int argc, char **argv)
     if(!top_page || ! btm_page) {
         exit(15);
     }
+
     esxdos_f_fstat(file_in, &finfo);
 
     piUartSwitch();
@@ -120,7 +121,7 @@ int main(int argc, char **argv)
     }
 
     if(verbose) {
-        printf("\x16\x06\x0A\x10""7\x11""0\x13""1 Uploading...   \x10""2 ");
+        printf("\x16\x06\x0A\x10""7\x11""0\x13""1 Downloading... \x10""2 ");
 
         for (uint8_t col = 22; col < 27; col++) {
             spuiDrawTriangle(col, 10);
@@ -139,7 +140,7 @@ int main(int argc, char **argv)
         }
     }
 
-    uartSendCmd("nextpi-file_receive -nbn 256\n");
+    uartSendCmd("nextpi-file_transmit -nbn \n");
     uartWaitOK(false);
     nbnSendHeader(finfo.size, filename);
     uartWaitOK(false);
