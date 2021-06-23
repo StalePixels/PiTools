@@ -81,16 +81,19 @@ int main(int argc, char **argv)
         filearg++;
     }
 
-    if(errno) {
-        return errno;
-    }
-
     top_page = esx_ide_bank_alloc(0);
     btm_page = esx_ide_bank_alloc(0);
 
     if(!top_page || ! btm_page) {
         exit(15);
     }
+
+    file_in = esxdos_f_open(argv[filearg], ESXDOS_MODE_R | ESXDOS_MODE_OE);
+
+    if(errno) {
+        return errno;
+    }
+
     esxdos_f_fstat(file_in, &finfo);
 
     piUartSwitch();
