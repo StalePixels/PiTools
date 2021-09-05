@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <nbnSendBlock.h>
+#include <intrinsic.h>
 
 #include "ula.h"
 #include "version.h"
@@ -22,16 +23,13 @@
 #include "uartWaitStr.h"
 #include "uartWaitOK.h"
 #include "uartSetBaud.h"
+#include "nbn.h"
 #include "nbnSendHeader.h"
 #include "spuiDrawTriangle.h"
-
-#define BUFFER_SIZE 4096
 
 #define NBN_RETRIES 3
 #define NBN_BLOCK_SUCCESS               '!'
 #define NBN_BLOCK_FAIL                  '?'
-
-uint8_t buffer[BUFFER_SIZE];
 
 #define HELP_TEXT_LENGTH        6
 
@@ -53,7 +51,7 @@ struct esxdos_stat      finfo;  // = {0,0,0,0,0};
 const char              rainbow[]       = {'2', '6', '4', '5', '0', '0'};
 uint8_t                 rainbow_pointer = 0;
 
-uint16_t                packet_size;
+uint16_t                packet_size = NBN_MAX_BLOCKSIZE;
 uint8_t                 nbn_retries;
 uint8_t                 nbn_status;
 uint8_t                 progress_style  = 0; // slow
@@ -65,12 +63,28 @@ uint8_t                 top_page, btm_page;
 
 const char              name[] = "PIPUT";
 
+unsigned char orig_cpu_speed;
+void at_exit() {
+    ZXN_WRITE_MMU2(10);
+    ZXN_WRITE_MMU3(11);
+    intrinsic_ei();
+    // Finally, restore the original CPU speed
+    ZXN_NEXTREGA(REG_TURBO_MODE, orig_cpu_speed);
+}
+
 int main(int argc, char **argv)
 {
+    // Store CPU speed
+    orig_cpu_speed = ZXN_READ_REG(REG_TURBO_MODE);
+    // Set CPU speed to 28Mhz
+    ZXN_NEXTREG(REG_TURBO_MODE, 3);
+    intrinsic_di();
+// Ensure we clean up as we shut down...
+    atexit(at_exit);
+
     // One arg, minimum
     if((argc < 2) || (!strcmp(argv[1],"-h"))) {
         printf("%s version %s\n", name, VERSION);
-//        logo(name);
         help(name);
         printf("%32s\n", "http://zxn.gg/pitools");
         exit(errno);
@@ -109,8 +123,8 @@ int main(int argc, char **argv)
         filename++;
     }
 
-    uint32_t nbn_blocks = (finfo.size / NBN_BLOCK_SIZE);
-    uint16_t finalblock = finfo.size % NBN_BLOCK_SIZE;
+    uint32_t nbn_blocks = (finfo.size / NBN_MAX_BLOCKSIZE);
+    uint16_t finalblock = finfo.size % NBN_MAX_BLOCKSIZE;
 
     uint16_t progress_parts = nbn_blocks + 1;
 
@@ -132,9 +146,10 @@ int main(int argc, char **argv)
             printf("\x10%c ", rainbow[rainbow_pointer]);
         }
 
-        printf("\x10""0\x11""7\x16\x06\x0B                      "
-               "\x16\x06\x0C                      "
-               "\x16\x06\x0D______________________");
+        printf( "\x10""0\x11""7"
+                "\x16\x06\x0B                      "
+                "\x16\x06\x0C                      "
+                "\x16\x06\x0D______________________");
 
         for (uint8_t row = 80; row < 104; row++) {
             plot(40, row);
@@ -142,7 +157,7 @@ int main(int argc, char **argv)
         }
     }
 
-    uartSendCmd("nextpi-file_receive -nbn 256\n");
+    uartSendCmd("nextpi-file_receive -nbn 256 -vl\n");
     uartWaitOK(false);
     nbnSendHeader(finfo.size, filename);
     uartWaitOK(false);
@@ -174,7 +189,7 @@ transmit_block:
         ZXN_WRITE_MMU2(btm_page);
         ZXN_WRITE_MMU3(top_page);
 
-        nbn_status = nbnSendBlock(NBN_BLOCK_SIZE, block);
+        nbn_status = nbnSendBlock(NBN_MAX_BLOCKSIZE, block);
 
         ZXN_WRITE_MMU2(10);
         ZXN_WRITE_MMU3(11);
@@ -225,10 +240,6 @@ transmit_last_block:
 
     ZXN_WRITE_MMU2(10);
     ZXN_WRITE_MMU3(11);
-
-    if(verbose) {
-        putchar(progressChar);
-    }
 
     if(nbn_status==NBN_BLOCK_FAIL) {
         if(--nbn_retries) {
