@@ -17,6 +17,7 @@
 #include "version.h"
 #include "help.h"
 #include "uart.h"
+#include "zxn.h"
 #include "piSupReset.h"
 #include "piUartSwitch.h"
 #include "uartSendCmd.h"
@@ -37,9 +38,9 @@ const uint8_t help_text_length = HELP_TEXT_LENGTH;
 const char *help_text[HELP_TEXT_LENGTH] = {
         " Usage examples",
         "\nUpload to pi & show progress bar",
-        "\n\t.PIPUT /path/to/file.ext",
+        "\n    .PIPUT /path/to/file.ext",
         "\nUpload to pi & hide progress bar",
-        "\n\t.PIPUT -q /path/to/file.ext",
+        "\n    .PIPUT -q /path/to/file.ext",
         "\nFull Docs at http://zxn.gg/piput",
 };
 
@@ -111,7 +112,17 @@ int main(int argc, char **argv)
     esxdos_f_fstat(file_in, &finfo);
 
     piUartSwitch();
-    uartSetBaud(115200);
+    uint8_t detected_speed = ZXN_READ_REG(REG_USER);
+    if(detected_speed==2) {
+        uartSetBaud(115200);
+    }
+    else if(detected_speed==8) {
+        uartSetBaud(2000000);
+    }
+    else {
+        if(verbose) printf("Use .pisend -q to set speed");
+        exit(20);
+    }
     piSupReset(verbose);
 
     char *filename = strrchr(argv[filearg], '/');
@@ -157,7 +168,7 @@ int main(int argc, char **argv)
         }
     }
 
-    uartSendCmd("nextpi-file_receive -nbn 256 -vl\n");
+    uartSendCmd("nextpi-file_receive -nbn 256\n");
     uartWaitOK(false);
     nbnSendHeader(finfo.size, filename);
     uartWaitOK(false);

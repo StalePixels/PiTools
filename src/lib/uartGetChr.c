@@ -6,17 +6,26 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <arch/zxn.h>
+#include <stdlib.h>
 
-#include "uart.h"
-#include "uartSendStr.h"
-#include "uartWaitStr.h"
-#include "uartDrain.h"
+#include "uartGetChr.h"
 #include "zxn.h"
 
 unsigned char           uartBufferChar;
 
 unsigned char uartGetChr() {
-    forever:
-    if (IO_UART_STATUS & IUS_RX_AVAIL) return IO_UART_RX;
-    goto forever;
+    uint32_t timeout = 65535<<1;
+
+    repeat:
+
+    if (IO_UART_STATUS & IUS_RX_AVAIL) {
+        return IO_UART_RX;
+    }
+
+    if(--timeout == 0) {
+//        printf("\nTIMED OUT WAITING FOR PI\n");
+        exit(20);
+    }
+
+    goto repeat;
 }

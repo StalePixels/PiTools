@@ -7,4 +7,5 @@ clean:
 
 install:
 	$(MAKE) -C src install_crc32
-	$(MAKE) -C src install_piput
+	$(MAKE) -C src install_crc32
+	$(MAKE) -C src install_piget

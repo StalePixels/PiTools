@@ -13,19 +13,14 @@
 uint8_t uartWaitOK(bool localecho) {
     unsigned char cbuff[4];
 
-    uint32_t timeout = 0;
-
-    repeat:
+    forever:
     cbuff[0] = cbuff[1];
     cbuff[1] = cbuff[2];
     cbuff[2] = cbuff[3];
     cbuff[3] = uartGetChr();
 
     if(localecho==true) {
-//        printf("%c%c%c%c(%d,%d,%d,%d)>", cbuff[0], cbuff[1], cbuff[2], cbuff[3], cbuff[0], cbuff[1], cbuff[2],
-//               cbuff[3]);
         printf("%c",            cbuff[3]);
-        timeout = 0;
     }
 
     if ((cbuff[3] == 10 && cbuff[2] == 13 && cbuff[1] == 'K' && cbuff[0] == 'O') ||
@@ -42,7 +37,6 @@ uint8_t uartWaitOK(bool localecho) {
 
         return 254;
     }
-    if(!timeout--) {
-        goto repeat;
-    }
+
+    goto forever;
 }

@@ -16,7 +16,7 @@ LS := ls -l@k
 
 CC=zcc
 CCFLAGS=+zxn -vn -O2 -clib=new
-CZFLAGS=-Cz="--clean --fullsize --main-fence 0xC000"
+CZFLAGS=-Cz="--main-fence --clean 0xC000"
 LDFLAGS=-m -lm
 INCFLAGS=-Iinc
 BUILD_DIR = ../build
@@ -27,7 +27,7 @@ INSTALL_DIR = /Volumes/devnext.xalior.com
 
 default: all
 
-all: crc32 piput
+all: crc32 piput piget
 
 lib/%.o: lib/%.c inc/%.h
 	$(CC) $(CCFLAGS) $(LDFLAGS) $(INCFLAGS) $< -c -o$@
@@ -44,6 +44,9 @@ crc32: $(CRC32_OBJS)
 
 install_crc32:
 	$(CP) $(BUILD_DIR)/CRC32 $(INSTALL_DIR)/dot/
+
+test_crc32: crc32 install_crc32
+
 
 ###
 # PIPUT
@@ -65,6 +68,9 @@ piput: $(PIPUT_OBJS)
 install_piput:
 	$(CP) $(BUILD_DIR)/PIPUT $(INSTALL_DIR)/dot/
 
+test_piput: piput install_piput
+
+
 ###
 # PIGET
 ###
@@ -74,21 +80,64 @@ PIGET_OBJS := lib/help.o \
 	lib/uartSendCmd.o lib/uartWaitOK.o \
 	lib/uartWaitStr.o lib/uartSendStr.o \
 	lib/uartGetChr.o lib/uartSendChr.o \
-	lib/nbnSendHeader.o lib/nbnSendBlock.o \
+	lib/nbnGetHeader.o lib/nbnReceiveBlock.o \
 	lib/spuiDrawTriangle.o
 
-piget: $(PIPUT_OBJS)
-	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piput.c $(PIPUT_OBJS) -oPIGET -create-app \
+piget: $(PIGET_OBJS)
+	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piget.c $(PIGET_OBJS) -oPIGET -create-app \
 		-pragma-include:piget-pragma.inc -subtype=dotn $(CZFLAGS)
 	$(MV) PIGET $(BUILD_DIR)/
 
 install_piget:
 	$(CP) $(BUILD_DIR)/PIGET $(INSTALL_DIR)/dot/
 
+test_piget: piget install_piget
+
+
+###
+# PIVER
+###
+PIVER_OBJS := lib/help.o \
+	lib/piUartSwitch.o lib/piSupReset.o \
+	lib/uartSetBaud.o lib/uartDrain.o lib/uartDump.o \
+	lib/uartSendCmd.o lib/uartWaitOK.o \
+	lib/uartWaitStr.o lib/uartSendStr.o \
+	lib/uartGetChr.o lib/uartSendChr.o
+
+piver: $(PIVER_OBJS)
+	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piver.c $(PIVER_OBJS) -oPIVER -create-app \
+		-pragma-include:piver-pragma.inc -subtype=dotn $(CZFLAGS)
+	$(MV) PIVER $(BUILD_DIR)/
+
+install_piver:
+	$(CP) $(BUILD_DIR)/PIVER $(INSTALL_DIR)/dot/
+
+test_piver: piver install_piver
+
+
 ###
 # META
 ###
+install: install_piput install_piget install_piver install_crc32
+
+test: test_piput test_piget test_piver test_crc32
+
 dist_clean: clean
 	rm -f $(BUILD_DIR)/*
+
 clean:
 	rm -f lib/*.o *.o *~ *_CODE.bin *_MAIN.bin *_UNASSIGNED.bin *.map+
+
+CMakeList:
+	echo "cmake_minimum_required(VERSION 3.10)" > CMakeLists.txt
+	echo "	project (CLionDummy C)" >> CMakeLists.txt
+	echo "	include_directories(" >> CMakeLists.txt
+	echo "		/u/ZX/z88dk/include/_DEVELOPMENT/sccz80" >> CMakeLists.txt
+	echo "		." >> CMakeLists.txt
+	echo "	)" >> CMakeLists.txt
+	echo "" >> CMakeLists.txt
+	echo "add_executable(CLionDummy" >> CMakeLists.txt
+	find `pwd` -name \*.c >> CMakeLists.txt
+	find `pwd` -name \*.h >> CMakeLists.txt
+	find `pwd` -name \*.asm >> CMakeLists.txt
+	echo " )" >> CMakeLists.txt

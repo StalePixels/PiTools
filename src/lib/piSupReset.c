@@ -16,18 +16,27 @@
 #include "uart.h"
 
 void piSupReset(bool verbose) {
-    bool reset = false;
+    uint8_t reset = 0;
+    uartSendStr("\nreset\n");
+    goto drain;
+
     get_again:
-    uartSendChr(4);         // send a Control D - to reset the supervisor
+    uartSendChr('3');         // send a Control D - to reset the supervisor
+    uartSendStr("\nreset\n");
+
+    drain:
     if(!uartDrain()) {
-        reset = true;
-        if(verbose) printf("\nResetting SUPervisor... \n");
-        uartSendChr(3);         // send a Control C - to kill, and retry
-        goto get_again;
-    } else if(reset) {
+        reset++;
+        if(verbose==true) printf("\nResetting SUPervisor... \n");
+        uartSendChr(4);         // send a Control D - to kill, and retry
+        if(!uartDrain()) {
+            goto get_again;
+        }
+    } else if(reset==2) {
         if(verbose) printf("\nERROR draining UART\n");
         exit(1);
     }
 
+    uartSendChr('\n');         // Send ENTER, wait for SUP prompt
     uartWaitStr("SUP>");
 }

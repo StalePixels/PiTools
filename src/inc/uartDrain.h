@@ -7,8 +7,6 @@
 
 #include <stdbool.h>
 
-extern uint8_t          checkFlag;
-
 bool uartDrain();
 
 #endif //PITOOLS_LIB_UARTDRAIN_H

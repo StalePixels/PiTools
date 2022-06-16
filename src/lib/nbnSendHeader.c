@@ -5,12 +5,13 @@
 #include <arch/zxn.h>
 #include "uartSendChr.h"
 #include "uartSendStr.h"
+#include "nbn.h"
 #include "nbnSendHeader.h"
 
 void nbnSendHeader(uint32_t filesize, const char *name) {
     // re
-    uint32_t blockcount = filesize / NBN_BLOCK_SIZE;
-    uint16_t finalblock = filesize % NBN_BLOCK_SIZE;
+    uint32_t blockcount = filesize / NBN_MAX_BLOCKSIZE;
+    uint16_t finalblock = filesize % NBN_MAX_BLOCKSIZE;
 
     // Send size
     uartSendChr_FASTMACRO((filesize >> 24) & 255);

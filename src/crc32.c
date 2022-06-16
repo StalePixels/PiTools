@@ -27,13 +27,12 @@ const char *help_text[HELP_TEXT_LENGTH] = {
 
 static uint32_t previousCrc32 = 0;
 
-const char              name[] = "PIPUT";
+const char              name[] = "CRC32";
 
 int main(int argc, char **argv)
 {
     // One arg, minimum
     if((argc < 2) || (!strcmp(argv[1],"-h"))) {
-        logo(name);
         help(name);
         exit(errno);
     }
