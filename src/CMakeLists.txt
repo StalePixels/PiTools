@@ -1,0 +1,57 @@
+cmake_minimum_required(VERSION 3.10)
+	project (CLionDummy C)
+	include_directories(
+		/u/ZX/z88dk/include/_DEVELOPMENT/sccz80
+		.
+	)
+
+add_executable(CLionDummy
+/Volumes/LaCie/ZX/pitools/src/cmake-build-debug/CMakeFiles/3.19.2/CompilerIdC/CMakeCCompilerId.c
+/Volumes/LaCie/ZX/pitools/src/piget.c
+/Volumes/LaCie/ZX/pitools/src/crc32.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartWaitStr.c
+/Volumes/LaCie/ZX/pitools/src/lib/piUartSwitch.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartDrain.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartGetChr.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartSendStr.c
+/Volumes/LaCie/ZX/pitools/src/lib/piSupReset.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartSendChr.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartSetBaud.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartSendCmd.c
+/Volumes/LaCie/ZX/pitools/src/lib/crc32.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartDump.c
+/Volumes/LaCie/ZX/pitools/src/lib/help.c
+/Volumes/LaCie/ZX/pitools/src/lib/uartWaitOK.c
+/Volumes/LaCie/ZX/pitools/src/lib/nbnGetHeader.c
+/Volumes/LaCie/ZX/pitools/src/lib/spuiDrawTriangle.c
+/Volumes/LaCie/ZX/pitools/src/lib/nbnSendHeader.c
+/Volumes/LaCie/ZX/pitools/src/lib/logo.c
+/Volumes/LaCie/ZX/pitools/src/lib/nbnReceiveBlock.c
+/Volumes/LaCie/ZX/pitools/src/lib/nbnSendBlock.c
+/Volumes/LaCie/ZX/pitools/src/piver.c
+/Volumes/LaCie/ZX/pitools/src/piput.c
+/Volumes/LaCie/ZX/pitools/src/inc/uartWaitOK.h
+/Volumes/LaCie/ZX/pitools/src/inc/ula.h
+/Volumes/LaCie/ZX/pitools/src/inc/help.h
+/Volumes/LaCie/ZX/pitools/src/inc/uartDump.h
+/Volumes/LaCie/ZX/pitools/src/inc/version.h
+/Volumes/LaCie/ZX/pitools/src/inc/nbnSendHeader.h
+/Volumes/LaCie/ZX/pitools/src/inc/nbnGetHeader.h
+/Volumes/LaCie/ZX/pitools/src/inc/spuiDrawTriangle.h
+/Volumes/LaCie/ZX/pitools/src/inc/logo.h
+/Volumes/LaCie/ZX/pitools/src/inc/uart.h
+/Volumes/LaCie/ZX/pitools/src/inc/nbnSendBlock.h
+/Volumes/LaCie/ZX/pitools/src/inc/nbnReceiveBlock.h
+/Volumes/LaCie/ZX/pitools/src/inc/nbn.h
+/Volumes/LaCie/ZX/pitools/src/inc/uartDrain.h
+/Volumes/LaCie/ZX/pitools/src/inc/zxn.h
+/Volumes/LaCie/ZX/pitools/src/inc/piUartSwitch.h
+/Volumes/LaCie/ZX/pitools/src/inc/uartWaitStr.h
+/Volumes/LaCie/ZX/pitools/src/inc/uartSendStr.h
+/Volumes/LaCie/ZX/pitools/src/inc/uartGetChr.h
+/Volumes/LaCie/ZX/pitools/src/inc/crc32.h
+/Volumes/LaCie/ZX/pitools/src/inc/uartSendCmd.h
+/Volumes/LaCie/ZX/pitools/src/inc/uartSetBaud.h
+/Volumes/LaCie/ZX/pitools/src/inc/uartSendChr.h
+/Volumes/LaCie/ZX/pitools/src/inc/piSupReset.h
+ )
