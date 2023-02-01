@@ -13,6 +13,10 @@ piput
 Sent a file to the Raspberry Pi using the "NBN" 8bit, error correcting protocol while displaying optional progress bar.
 
 
-piget (todo)
+piget
 -----
-Retieve a file from the Raspberry Pi using the "NBN" 8bit, error correcting protocol while displaying optional progress bar.
+Retrieve a file from the Raspberry Pi using the "NBN" 8bit, error correcting protocol while displaying optional progress bar.
+
+piver
+-----
+Get the current version of NextPi that is running, write it to memory, print to screen, or both.
