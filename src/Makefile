@@ -22,12 +22,13 @@ INCFLAGS=-Iinc
 BUILD_DIR = ../build
 
 INSTALL_DIR = /Volumes/devnext.xalior.com
+RELEASE_DIR = /u/GIT/ZX/tbblue
 
 .PHONY: clean crc32dot piputdot
 
 default: all
 
-all: crc32 piput piget
+all: crc32 piput piget piver
 
 lib/%.o: lib/%.c inc/%.h
 	$(CC) $(CCFLAGS) $(LDFLAGS) $(INCFLAGS) $< -c -o$@
@@ -127,6 +128,9 @@ dist_clean: clean
 
 clean:
 	rm -f lib/*.o *.o *~ *_CODE.bin *_MAIN.bin *_UNASSIGNED.bin *.map+
+
+release:
+	$(CP) $(BUILD_DIR)/* $(RELEASE_DIR)/dot
 
 CMakeList:
 	echo "cmake_minimum_required(VERSION 3.10)" > CMakeLists.txt

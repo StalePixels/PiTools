@@ -118,7 +118,7 @@ int main(int argc, char **argv)
         exit(13);
     }
 
-    if(_SYSVAR_RAMTOP > 65365 || _SYSVAR_RAMTOP < 49152) {
+    if(memdump == true && (_SYSVAR_RAMTOP > 65365 || _SYSVAR_RAMTOP < 49152)) {
         printAtStr(0,0, "RAMTOP not between 49152 & 65365");
         exit(31);
     }
