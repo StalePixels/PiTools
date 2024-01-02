@@ -45,12 +45,12 @@ const char *help_text[HELP_TEXT_LENGTH] = {
         "\nPrint NextPi version",
         "\n .PIVER -p",
         "\nSave NextPi version above RAMTOP",
-        "\n .PIGET -q",
+        "\n .PIVER -q",
         "\nBoth options above at same time",
-        "\n .PIGET -b",
+        "\n .PIVER -b",
         "\nDo both, & print debug output",
-        "\n .PIGET -b -d",
-        "\nFull Docs at http://zxn.gg/piget"
+        "\n .PIVER -b -d",
+        "\nFull Docs at http://zxn.gg/piver"
 };
 
 bool                    memdump         = false;
