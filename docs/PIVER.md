@@ -47,15 +47,15 @@ RAMTOP not in acceptable range
 Data Formats
 ------------
 
-Memory patch version format is 3 bytes:
-_RAMTOP: patchlevel
-_RAMTOP+1: minor version
+Memory patch version format is 3 bytes: \
+_RAMTOP: patchlevel \
+_RAMTOP+1: minor version \
 _RAMTOP+2: major version
 
-Printed patch version format is M.mmP
-M: single ASCII digit, 0 and up
-mm: double ASCII digit, 0 to 99
-P: single ASCII letter
+Printed patch version format is M.mmP \
+M: single ASCII digit, 0 and up \
+mm: double ASCII digit, 0 to 99 \
+P: single ASCII letter \
 
 Letters, generally, reflect the following:
 * A - Internal Team (alpha) testing 
