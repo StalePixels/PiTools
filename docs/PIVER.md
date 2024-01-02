@@ -1,5 +1,3 @@
-
-
 .PIVER
 ======
 Interrogates NextPi for the current version details and then exists.
