@@ -32,9 +32,9 @@
 #include "uartDump.h"
 #include "spuiDrawTriangle.h"
 
-#define BUFFER_SIZE 4096
-
-uint8_t buffer[BUFFER_SIZE];
+//#define BUFFER_SIZE 4096
+//
+//uint8_t buffer[BUFFER_SIZE];
 
 #define HELP_TEXT_LENGTH        10
 
@@ -67,7 +67,7 @@ void at_exit() {
 }
 
 void version() {
-    printf("%s version %s\n", name, VERSION);
+    printf("%s\n", VERSION);
 }
 
 void exitWithHelp() {
@@ -192,10 +192,10 @@ int main(int argc, char **argv)
             ZXN_WRITE_MMU6(mmu6);
             ZXN_WRITE_MMU7(mmu7);
         }
-        return 0;
+        exit(0);
     }
 
     fail:
     printf("ERROR retrieving version");
-    return 13;
+    exit(13);
 }

@@ -17,7 +17,7 @@ LS := ls -l@k
 CC=zcc
 CCFLAGS=+zxn -vn -O2 -clib=new
 CZFLAGS=-Cz="--main-fence --clean 0xC000"
-LDFLAGS=-m -lm
+LDFLAGS=-m  -lm
 INCFLAGS=-Iinc
 BUILD_DIR = ../build
 
@@ -106,8 +106,8 @@ PIVER_OBJS := lib/help.o \
 	lib/uartGetChr.o lib/uartSendChr.o
 
 piver: $(PIVER_OBJS)
-	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piver.c $(PIVER_OBJS) -oPIVER -create-app \
-		-pragma-include:piver-pragma.inc -subtype=dotn $(CZFLAGS)
+	$(CC) $(CCFLAGS) -startup=30 $(LDFLAGS) $(INCFLAGS) piver.c $(PIVER_OBJS) -oPIVER -create-app \
+		-pragma-include:piver-pragma.inc -subtype=dot
 	$(MV) PIVER $(BUILD_DIR)/
 
 install_piver:

@@ -24,7 +24,7 @@ unsigned char uartGetChr() {
 
     if(--timeout == 0) {
 //        printf("\nTIMED OUT WAITING FOR PI\n");
-        exit(20);
+        exit(31);
     }
 
     goto repeat;

@@ -17,12 +17,10 @@
 
 void piSupReset(bool verbose) {
     uint8_t reset = 0;
-    uartSendStr("\nreset\n");
     goto drain;
 
     get_again:
     uartSendChr('3');         // send a Control D - to reset the supervisor
-    uartSendStr("\nreset\n");
 
     drain:
     if(!uartDrain()) {

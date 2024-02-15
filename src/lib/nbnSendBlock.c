@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "uartGetChr.h"
 
-uint8_t nbnSendBlock(uint16_t size, unsigned char *data) {
+uint8_t nbnSendBlock(uint16_t size, const unsigned char *data) {
     uint8_t nbn_checksum = 0;
     for(uint16_t nbn_byte = 0; nbn_byte < size; nbn_byte++) {
         while (IO_UART_STATUS & IUS_TX_BUSY);  // Busy wait to send a single byte.
