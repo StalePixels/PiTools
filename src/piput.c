@@ -168,7 +168,7 @@ int main(int argc, char **argv)
         }
     }
 
-    uartSendCmd("nextpi-file_receive -nbn 256\n");
+    uartSendCmd("nextpi-file_receive -vl -nbn 256\n");
     uartWaitOK(false);
     nbnSendHeader(finfo.size, filename);
     uartWaitOK(false);

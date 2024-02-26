@@ -1,6 +1,7 @@
 //
 // Created by D. Rimron-Soutter on 17/06/2021.
 //
+#include <stdio.h>
 #include <stdint.h>
 #include <arch/zxn.h>
 #include "uartSendChr.h"
@@ -14,18 +15,21 @@ void nbnSendHeader(uint32_t filesize, const char *name) {
     uint16_t finalblock = filesize % NBN_MAX_BLOCKSIZE;
 
     // Send size
+//    printf("FILESIZE: %lu\n", filesize);
     uartSendChr_FASTMACRO((filesize >> 24) & 255);
     uartSendChr_FASTMACRO((filesize >> 16) & 255);
     uartSendChr_FASTMACRO((filesize >> 8 ) & 255);
     uartSendChr_FASTMACRO((filesize      ) & 255);
 
     // Send blocks
+//    printf("BLOCKCOUNT: %lu\n", blockcount);
     uartSendChr_FASTMACRO((blockcount >> 24) & 255);
     uartSendChr_FASTMACRO((blockcount >> 16) & 255);
     uartSendChr_FASTMACRO((blockcount >> 8 ) & 255);
     uartSendChr_FASTMACRO((blockcount      ) & 255);
 
     // Send remainder
+//    printf("FINALCOUNT: %d\n", finalblock);
     uartSendChr_FASTMACRO((finalblock >> 8 ) & 255);
     uartSendChr_FASTMACRO((finalblock      ) & 255);
 
@@ -34,4 +38,5 @@ void nbnSendHeader(uint32_t filesize, const char *name) {
 
     // Terminator byte
     uartSendChr_FASTMACRO(0);
+
 }

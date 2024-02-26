@@ -7,3 +7,4 @@ src/cmake-build-debug
 */*_UNASSIGNED.bin
 */*.map
 src/lib/*.o
+.DS_Store

@@ -59,7 +59,8 @@ PIPUT_OBJS := lib/help.o \
 	lib/uartWaitStr.o lib/uartSendStr.o \
 	lib/uartGetChr.o lib/uartSendChr.o \
 	lib/nbnSendHeader.o lib/nbnSendBlock.o \
-	lib/spuiDrawTriangle.o
+	lib/spuiDrawTriangle.o \
+	lib/command_line_parse_1024B.asm
 
 piput: $(PIPUT_OBJS)
 	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piput.c $(PIPUT_OBJS) -oPIPUT -create-app \
@@ -82,7 +83,8 @@ PIGET_OBJS := lib/help.o \
 	lib/uartWaitStr.o lib/uartSendStr.o \
 	lib/uartGetChr.o lib/uartSendChr.o \
 	lib/nbnGetHeader.o lib/nbnReceiveBlock.o \
-	lib/spuiDrawTriangle.o
+	lib/spuiDrawTriangle.o \
+	lib/command_line_parse_1024B.asm
 
 piget: $(PIGET_OBJS)
 	$(CC) $(CCFLAGS) -startup=1 $(LDFLAGS) $(INCFLAGS) piget.c $(PIGET_OBJS) -oPIGET -create-app \
@@ -130,7 +132,9 @@ clean:
 	rm -f lib/*.o *.o *~ *_CODE.bin *_MAIN.bin *_UNASSIGNED.bin *.map+
 
 release:
-	$(CP) $(BUILD_DIR)/* $(RELEASE_DIR)/dot
+	$(CP) $(BUILD_DIR)/PIPUT $(RELEASE_DIR)/dot
+	$(CP) $(BUILD_DIR)/PIGET $(RELEASE_DIR)/dot
+	$(CP) $(BUILD_DIR)/PIVER $(RELEASE_DIR)/dot
 
 CMakeList:
 	echo "cmake_minimum_required(VERSION 3.10)" > CMakeLists.txt

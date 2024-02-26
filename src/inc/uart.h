@@ -8,7 +8,7 @@
 #include <arch/zxn.h>
 #include <stdbool.h>
 
-extern uint8_t                  uart_idx;
+extern uint16_t                  uart_idx;
 
 void uartInit();
 

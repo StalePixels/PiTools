@@ -3,12 +3,17 @@
 //
 
 #include <arch/zxn.h>
+#include <z80.h>
 #include <arch/zxn/esxdos.h>
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 #include <errno.h>
+#include <nbnReceiveBlock.h>
+#include <nbn.h>
+#include <intrinsic.h>
 
 #include "crc32.h"
 #include "help.h"
@@ -29,9 +34,27 @@ static uint32_t previousCrc32 = 0;
 
 const char              name[] = "CRC32";
 
+unsigned char orig_cpu_speed;
+
+void at_exit() {
+    ZXN_WRITE_MMU2(10);
+    ZXN_WRITE_MMU3(11);
+    intrinsic_ei();
+    // Finally, restore the original CPU speed
+    ZXN_NEXTREGA(REG_TURBO_MODE, orig_cpu_speed);
+}
+
 int main(int argc, char **argv)
 {
-    // One arg, minimum
+    // Store CPU speed
+    orig_cpu_speed = ZXN_READ_REG(REG_TURBO_MODE);
+    // Set CPU speed to 28Mhz
+    ZXN_NEXTREG(REG_TURBO_MODE, 3);
+
+    // Ensure we clean up as we shut down...
+    atexit(at_exit);
+
+// One arg, minimum
     if((argc < 2) || (!strcmp(argv[1],"-h"))) {
         help(name);
         exit(errno);

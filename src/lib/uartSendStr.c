@@ -11,7 +11,7 @@
 #include "uartSendStr.h"
 #include "zxn.h"
 
-uint8_t uart_idx;
+uint16_t uart_idx;
 
 void uartSendStr(const char* str) {
     zx_border(4);
