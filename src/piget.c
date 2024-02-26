@@ -154,7 +154,7 @@ int main(int argc, char **argv)
         }
     }
 
-    uartSendCmd("nextpi-file_transmit -nbn -vl\n");
+    uartSendCmd("nextpi-file_transmit -nbn\n");
     uartWaitOK(false);
     uartSendChr(0);
     uartSendStr(argv[filearg]);

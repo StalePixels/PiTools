@@ -44,7 +44,7 @@ crc32: $(CRC32_OBJS)
 	$(MV) CRC32 $(BUILD_DIR)/
 
 install_crc32:
-	$(CP) $(BUILD_DIR)/CRC32 $(INSTALL_DIR)/dot/
+	$(CP) $(BUILD_DIR)/CRC32 $(INSTALL_DIR)/dot/CRC32c
 
 test_crc32: crc32 install_crc32
 
