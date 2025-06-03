@@ -64,7 +64,7 @@ uint8_t                 ver_minor;
 uint8_t                 ver_patch;
 
 const char              name[] = "PIVER";
-const char              cachepath[] = "/sys/piver.cache";
+const char              cachepath[] = "/tmp/piver.cache";
 #define VER_MAXLEN      16
 char                    ver[VER_MAXLEN+1];
 
