@@ -8,7 +8,6 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <nbnReceiveBlock.h>
@@ -36,28 +35,38 @@
 //
 //uint8_t buffer[BUFFER_SIZE];
 
-#define HELP_TEXT_LENGTH        10
+#define HELP_TEXT_LENGTH        7
 
 
 const uint8_t help_text_length = HELP_TEXT_LENGTH;
 const char *help_text[HELP_TEXT_LENGTH] = {
         " Usage examples",
-        "\nPrint NextPi version",
-        "\n .PIVER -p",
-        "\nSave NextPi version above RAMTOP",
-        "\n .PIVER -q",
-        "\nBoth options above at same time",
-        "\n .PIVER -b",
-        "\nDo both, & print debug output",
-        "\n .PIVER -b -d",
+        "\n .PIVER -p        print version",
+        "\n .PIVER -q       save at RAMTOP",
+        "\n .PIVER -b        do both above",
+        "\n .PIVER -p -d     print & debug",
+        "\n .PIVER -c   force update cache",
         "\nFull Docs at http://zxn.gg/piver"
 };
 
 bool                    memdump         = false;
 bool                    verbose         = false;
 bool                    debug           = false;
+bool                    useCache        = true;
+bool                    cacheUsed       = false;
+
+uint8_t                 scratch8_1;
+uint8_t                 scratch8_2;
+uint8_t                 detected_speed;
+
+uint8_t                 ver_major;
+uint8_t                 ver_minor;
+uint8_t                 ver_patch;
 
 const char              name[] = "PIVER";
+const char              cachepath[] = "/sys/piver.cache";
+#define VER_MAXLEN      16
+char                    ver[VER_MAXLEN+1];
 
 unsigned char orig_cpu_speed;
 void at_exit() {
@@ -83,32 +92,39 @@ int main(int argc, char **argv)
     orig_cpu_speed = ZXN_READ_REG(REG_TURBO_MODE);
     // Set CPU speed to 28Mhz
     ZXN_NEXTREG(REG_TURBO_MODE, 3);
-    intrinsic_di();
+    // intrinsic_di();
 // Ensure we clean up as we shut down...
     atexit(at_exit);
 
     // One arg, or else
     if(argc < 2) exitWithHelp();
 
-    for(uint8_t param=1; param<argc; param++) {
-        if (strcmp(argv[param], "-d")==0) {
-            debug = true;
-        } else
-        if (strcmp(argv[param], "-b")==0) {
-            verbose = true;
-            memdump = true;
-        } else
-        if (strcmp(argv[param], "-p")==0) {
-            verbose = true;
-        } else
-        if (strcmp(argv[param], "-q")==0) {
-            memdump = true;
-        } else
-        if (strcmp(argv[param], "-v")==0) {
-            version();
-            exit(errno);
-        } else {
+    for(scratch8_1=1; scratch8_1<argc; scratch8_1++) {
+        if (*argv[scratch8_1] != '-') {
             exitWithHelp();
+        }
+        switch (argv[scratch8_1][1]) {
+            case 'd':
+                debug = true;
+                break;
+            case 'b':
+                verbose = true;
+                memdump = true;
+                break;
+            case 'p':
+                verbose = true;
+                break;
+            case 'q':
+                memdump = true;
+                break;
+            case 'c':
+                useCache = false;
+                break;
+            case 'v':
+                version();
+                exit(errno);
+            default:
+                exitWithHelp();
         }
     }
 
@@ -130,7 +146,7 @@ int main(int argc, char **argv)
     }
 
     piUartSwitch();
-    uint8_t detected_speed = ZXN_READ_REG(REG_USER);
+    detected_speed = ZXN_READ_REG(REG_USER);
     if(detected_speed==2) {
         uartSetBaud(115200);
     }
@@ -141,61 +157,75 @@ int main(int argc, char **argv)
         if(debug) printf("Use .pisend -q to set speed");
         exit(20);
     }
+
+    //If the cache is enabled, let's use it
+    if (useCache) {
+        scratch8_2 = esxdos_f_open(cachepath, ESXDOS_MODE_R);
+        if (errno) {
+            goto no_cache;
+        }
+        scratch8_1 = esxdos_f_read(scratch8_1, ver, 16);
+        esxdos_f_close(scratch8_1);
+
+        if (scratch8_1 == 0) goto no_cache;
+
+        if(debug) printf("cache used: %s, %d bytes\n", ver, scratch8_1);
+
+        cacheUsed = true;
+
+        goto ver_got;
+    }
+
+    no_cache:
+    errno = 0;
     piSupReset(debug);
 
     uartSendCmd("nextpi-admin_version\n");
 
-#define VER_MAXLEN      16
-    uint8_t ver_len = 0;
-    char ver[VER_MAXLEN+1];
-    memset(ver, 0, VER_MAXLEN+1);
-
-
-    for(uint8_t checking=255;checking;--checking) {
+    scratch8_1 = 0;
+    for(scratch8_2=255;scratch8_2;--scratch8_2) {
         MACRO__WAIT_FOR_SCANLINE(1); //waste some time, in case there's LOTS of output, let it flood the buffer if required!
         get_more:
         if (IO_UART_STATUS & IUS_RX_AVAIL) {  // Busy wait && get a single byte.
-            zx_border((uint8_t )checking%8);
-            ver[ver_len] = IO_UART_RX;
-            if(ver[ver_len]==13) goto ver_got;
-            ver_len++;
-            if(ver_len>VER_MAXLEN) goto ver_got;
+            zx_border((uint8_t )scratch8_2%8);
+            ver[scratch8_1] = IO_UART_RX;
+            if(ver[scratch8_1]==13) goto ver_got;
+            scratch8_1++;
+            if(scratch8_1>VER_MAXLEN) goto ver_got;
             goto get_more;
         }
     }
     goto fail;
+
     ver_got:
-    if(strstr(ver, "bash") == NULL) {
+    // ver[++scratch8_1] = 0;
+    if(ver[0] != 'b') {
         if(verbose) printf(ver);
 
         if(memdump) {
-
-            uint8_t ver_major;
-            uint8_t ver_minor;
-            uint8_t ver_patch;
-
             ver_major = ver[0] - '0';
             ver_minor = ((ver[2] - '0') * 10) + ver[3] - '0';
             ver_patch = ver[4];
-
-            uint8_t mmu6 = ZXN_READ_REG(REG_MMU6);
-            uint8_t mmu7 = ZXN_READ_REG(REG_MMU7);
-
-            ZXN_WRITE_MMU6(0);
-            ZXN_WRITE_MMU7(1);
 
             uint8_t * verram = (uint8_t *) ram;
             verram[0] = ver_patch;
             verram[1] = ver_minor;
             verram[2] = ver_major;
+        }
 
-            ZXN_WRITE_MMU6(mmu6);
-            ZXN_WRITE_MMU7(mmu7);
+        if (!cacheUsed) {
+            scratch8_1 = esxdos_f_open(cachepath, ESXDOS_MODE_W | ESXDOS_MODE_CT);
+            if (errno) {
+                printf("ERROR creating cache file");
+                exit(errno);
+            }
+            scratch8_2 = esxdos_f_write(scratch8_1, ver, 16);
+            esxdos_f_close(scratch8_1);
         }
         exit(0);
     }
 
     fail:
-    printf("ERROR retrieving version");
+    printf("ERROR retrieving version\n");
     exit(13);
 }

@@ -23,6 +23,7 @@ BUILD_DIR = ../build
 
 INSTALL_DIR = /Volumes/devnext.xalior.com
 RELEASE_DIR = /u/GIT/ZX/tbblue
+PACKAGE_DIR = DOT
 
 .PHONY: clean crc32dot piputdot
 
@@ -68,6 +69,7 @@ piput: $(PIPUT_OBJS)
 	$(MV) PIPUT $(BUILD_DIR)/
 
 install_piput:
+	#url -s -F file=@$(PACKAGE_DIR)/PIPUT -F submit=submit http://devnext/upload.cgi >/dev/null
 	$(CP) $(BUILD_DIR)/PIPUT $(INSTALL_DIR)/dot/
 
 test_piput: piput install_piput
@@ -110,10 +112,12 @@ PIVER_OBJS := lib/help.o \
 piver: $(PIVER_OBJS)
 	$(CC) $(CCFLAGS) -startup=30 $(LDFLAGS) $(INCFLAGS) piver.c $(PIVER_OBJS) -oPIVER -create-app \
 		-pragma-include:piver-pragma.inc -subtype=dot
+	$(LS) PIVER
 	$(MV) PIVER $(BUILD_DIR)/
 
 install_piver:
-	$(CP) $(BUILD_DIR)/PIVER $(INSTALL_DIR)/dot/
+	curl -s -F file=@../build/PIVER -F submit=submit http://devnext/upload.cgi >/dev/null
+	@#$(CP) $(BUILD_DIR)/PIVER $(INSTALL_DIR)/dot/
 
 test_piver: piver install_piver
 
