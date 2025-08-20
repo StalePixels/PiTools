@@ -40,9 +40,9 @@ uint8_t buffer[BUFFER_SIZE];
 const uint8_t help_text_length = HELP_TEXT_LENGTH;
 const char *help_text[HELP_TEXT_LENGTH] = {
         " Usage examples",
-        "\nDownload from pi & show progress bar",
+        "\nDownload with progress bar",
         "\n .PIGET /path/to/file.ext",
-        "\nDownload from pi & hide progress bar",
+        "\nDownload without progress bar",
         "\n .PIGET -q /path/to/file.ext",
         "\nFull Docs at http://zxn.gg/piget",
 };
