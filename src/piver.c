@@ -164,8 +164,8 @@ int main(int argc, char **argv)
         if (errno) {
             goto no_cache;
         }
-        scratch8_1 = esxdos_f_read(scratch8_1, ver, 16);
-        esxdos_f_close(scratch8_1);
+        scratch8_1 = esxdos_f_read(scratch8_2, ver, 16);
+        esxdos_f_close(scratch8_2);
 
         if (scratch8_1 == 0) goto no_cache;
 
