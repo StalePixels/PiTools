@@ -1,3 +1,9 @@
+V1.19
+
+PIVER
+ - Keeps its cache on the system drive (C:/tmp), so it works from any current drive.
+
+
 V1.18
 
 PIVER
