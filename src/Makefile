@@ -25,11 +25,18 @@ INSTALL_DIR = /Volumes/devnext.xalior.com
 RELEASE_DIR = /u/GIT/ZX/tbblue
 PACKAGE_DIR = DOT
 
-.PHONY: clean crc32dot piputdot
+.PHONY: clean crc32dot piputdot lib
 
 default: all
 
-all: crc32 piput piget piver
+all: crc32 piput piget piver lib
+
+###
+# Library functions that no tool here links; built so that they keep compiling
+###
+LIB_OBJS := lib/uartWaitStrTimeout.o lib/piSupResetTimeout.o
+
+lib: $(LIB_OBJS)
 
 lib/%.o: lib/%.c inc/%.h
 	$(CC) $(CCFLAGS) $(LDFLAGS) $(INCFLAGS) $< -c -o$@

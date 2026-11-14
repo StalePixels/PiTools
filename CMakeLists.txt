@@ -21,6 +21,8 @@ add_executable(piget
         src/inc/uartSetBaud.h src/lib/uartSetBaud.c
         src/inc/uartWaitOK.h src/lib/uartWaitOK.c
         src/inc/uartWaitStr.h src/lib/uartWaitStr.c
+        src/inc/uartWaitStrTimeout.h src/lib/uartWaitStrTimeout.c
+        src/inc/piSupResetTimeout.h src/lib/piSupResetTimeout.c
         src/inc/spuiDrawTriangle.h src/lib/spuiDrawTriangle.c src/lib/nbnGetHeader.c src/inc/nbnGetHeader.h src/lib/nbnReceiveBlock.c src/inc/nbnReceiveBlock.h src/inc/nbn.h)
 
 add_executable(piput
