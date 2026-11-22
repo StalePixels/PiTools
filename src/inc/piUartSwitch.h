@@ -10,6 +10,6 @@
 __sfr __banked __at 0x153b IO_153B;
 __sfr __banked __at 0x153b IO_UART_CONTROL;
 
-void piUartSwitch();
+void piUartSwitch(void);
 
 #endif //PITOOLS_LIB_PIUARTSWITCH_H

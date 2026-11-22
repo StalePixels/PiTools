@@ -10,7 +10,7 @@
 
 extern uint16_t                  uart_idx;
 
-void uartInit();
+void uartInit(void);
 
 void uartGetStr(char* responseBuffer);
 

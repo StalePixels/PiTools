@@ -12,7 +12,7 @@
 #include "zxn.h"
 
 
-bool uartDrain() {
+bool uartDrain(void) {
     bool          checkFlag = false;
     for(uint8_t checking=100;checking;--checking) {
         MACRO__WAIT_FOR_SCANLINE(1); //waste some time, in case there's LOTS of output, let it flood the buffer if required!

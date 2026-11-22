@@ -6,6 +6,6 @@
 #define PITOOLS_LIB_UARTGETCHR_H
 
 extern unsigned char            uartBufferChar;
-unsigned char uartGetChr();
+unsigned char uartGetChr(void);
 
 #endif //PITOOLS_LIB_UARTGETCHR_H

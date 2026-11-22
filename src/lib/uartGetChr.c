@@ -13,7 +13,7 @@
 
 unsigned char           uartBufferChar;
 
-unsigned char uartGetChr() {
+unsigned char uartGetChr(void) {
     uint32_t timeout = 65535<<1;
 
     repeat:

@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "piUartSwitch.h"
 
-void piUartSwitch() {
+void piUartSwitch(void) {
     // Select Pi UART
     ZXN_NEXTREG(0xA0, 0x32);  // Enable UART and SPI slave on Pi Bus
     IO_UART_CONTROL = 0x40;   // Direct the UART to the Pi

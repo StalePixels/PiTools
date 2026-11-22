@@ -7,6 +7,6 @@
 
 #include <stdbool.h>
 
-bool uartDrain();
+bool uartDrain(void);
 
 #endif //PITOOLS_LIB_UARTDRAIN_H
